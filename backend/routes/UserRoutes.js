@@ -107,7 +107,7 @@ router.route("/login").post(async (req, res) => {
     }
 });
 
-router.route("/account/me").get(async (req, res) => {
+router.route("/me").get(async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
         const decoded = jwt.verify(token, 'abcd1234');

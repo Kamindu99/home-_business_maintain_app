@@ -14,6 +14,10 @@ const teaDaluSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    minusKg: {
+        type: Number,
+        required: true
+    },
     subTotalKg: {
         type: Number,
         required: true

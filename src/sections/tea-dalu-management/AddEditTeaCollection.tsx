@@ -13,6 +13,7 @@ import { dispatch } from 'store';
 
 // assets
 import { createBooktransfer, toInitialState, updateBooktransfer } from 'store/reducers/tea-collection';
+import { useEffect } from 'react';
 
 // types
 
@@ -23,7 +24,8 @@ const getInitialValues = (booktransfer: FormikValues | null) => {
     code: '',
     collectedDate: new Date().toISOString().split('T')[0],
     subTotalKg: '',
-    totalKg: ''
+    totalKg: '',
+    minusKg: ''
   };
 
   if (booktransfer) {
@@ -48,7 +50,7 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
 
   const BooktransferSchema = Yup.object().shape({
     collectedDate: Yup.string().max(255).required('Borrow date is required'),
-    subTotalKg: Yup.string().max(255).required('Borrow person is required')
+    totalKg: Yup.string().max(255).required('Borrow person is required')
   });
 
   const formik = useFormik({
@@ -65,6 +67,7 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
               code: values.code,
               collectedDate: values.collectedDate,
               totalKg: values.totalKg,
+              minusKg: values.minusKg,
               subTotalKg: values.subTotalKg
             })
           );
@@ -82,6 +85,16 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
+  const minusKg = getFieldProps('minusKg');
+  const totalKg = getFieldProps('totalKg');
+
+  useEffect(() => {
+    if (totalKg.value && minusKg.value) {
+      const subTotal = parseFloat(totalKg.value) - parseFloat(minusKg.value);
+      formik.setFieldValue('subTotalKg', subTotal.toString());
+    }
+  }, [totalKg.value, minusKg.value]);
+
   return (
     <>
       <FormikProvider value={formik}>
@@ -90,6 +103,20 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
             <DialogTitle>{booktransfer ? 'Edit Borrow Details' : 'New Borrow Details'}</DialogTitle>
             <DialogContent sx={{ p: 2.5 }}>
               <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1.25}>
+                    <InputLabel htmlFor="code">Code</InputLabel>
+                    <TextField
+                      fullWidth
+                      id="code"
+                      type="text"
+                      placeholder="Enter Code"
+                      {...getFieldProps('code')}
+                      error={Boolean(touched.code && errors.code)}
+                      helperText={touched.code && errors.code}
+                    />
+                  </Stack>
+                </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="collectedDate">Collected Date</InputLabel>
@@ -120,11 +147,26 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
+                    <InputLabel htmlFor="minusKg">Minus (KG)</InputLabel>
+                    <TextField
+                      fullWidth
+                      id="minusKg"
+                      type="text"
+                      placeholder="Enter Minus (KG)"
+                      {...getFieldProps('minusKg')}
+                      error={Boolean(touched.minusKg && errors.minusKg)}
+                      helperText={touched.minusKg && errors.minusKg}
+                    />
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={1.25}>
                     <InputLabel htmlFor="subTotalKg">Sub Total (KG)</InputLabel>
                     <TextField
                       fullWidth
                       id="subTotalKg"
                       type="text"
+                      InputProps={{ readOnly: true }}
                       placeholder="Enter Sub Total (KG)"
                       {...getFieldProps('subTotalKg')}
                       error={Boolean(touched.subTotalKg && errors.subTotalKg)}

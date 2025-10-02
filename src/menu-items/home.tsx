@@ -23,6 +23,13 @@ const home: NavItemType = {
             type: 'item',
             url: '/home/dashboard',
             icon: icons.DashboardOutlined,
+        },
+        {
+            id: 'tea-collection',
+            title: <FormattedMessage id="Tea Collection" />,
+            type: 'item',
+            url: '/tea-collection',
+            icon: icons.DashboardOutlined,
         }
     ]
 };

@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/TeaDaluModel')
-const Category = require('../models/CategoryModel')
 
 router.post("/", async (req, res) => {
     const product = new Product(req.body);
@@ -34,9 +33,6 @@ router.route("/").get(async (req, res) => {
         if (search) {
             searchQuery.code = new RegExp(search, 'i'); // Case-insensitive search
         }
-
-        // Build search query
-        let searchQueryFavo = { isActive: true };
 
         // Fetch total number of matching products
         const total = await Product.countDocuments(searchQuery);
@@ -77,11 +73,12 @@ router.route("/").get(async (req, res) => {
 
 router.route("/:id").put(async (req, res) => {
     let productId = req.params.id;
-    const { code,collectedDate,totalKg,subTotalKg } = req.body;
+    const { code,collectedDate,totalKg,subTotalKg ,minusKg} = req.body;
     const updatedProduct = {
         code,
         collectedDate,
         totalKg,
+        minusKg,
         subTotalKg
     };
 
@@ -108,10 +105,6 @@ router.route("/:id").delete(async (req, res) => {
 router.route("/:id").get(async (req, res) => {
 
     try {
-
-        // Build search query
-        let searchQueryFavo = { isActive: true };
-
         // Fetch paginated and sorted products
 
         let productId = req.params.id;

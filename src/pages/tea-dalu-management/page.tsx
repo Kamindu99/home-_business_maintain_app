@@ -3,37 +3,36 @@ import { Fragment, MouseEvent, useEffect, useMemo, useState } from 'react';
 
 // material ui
 import {
-    Button,
-    Chip,
-    Dialog,
-    IconButton,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Tooltip,
-    alpha,
-    useMediaQuery,
-    useTheme
+  Button,
+  Dialog,
+  IconButton,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Tooltip,
+  alpha,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
 
 // third-party
 import { PopupTransition } from 'components/@extended/Transitions';
 import { EmptyTable, HeaderSort, SortingSelect, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
 import {
-    Cell,
-    Column,
-    HeaderGroup,
-    Row,
-    useExpanded,
-    useFilters,
-    useGlobalFilter,
-    usePagination,
-    useRowSelect,
-    useSortBy,
-    useTable
+  Cell,
+  Column,
+  HeaderGroup,
+  Row,
+  useExpanded,
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useRowSelect,
+  useSortBy,
+  useTable
 } from 'react-table';
 
 import { GlobalFilter, renderFilterTypes } from 'utils/react-table';
@@ -208,23 +207,13 @@ const TransferBookList = () => {
           Header: 'Total KG',
           accessor: 'totalKg'
         },
+          {
+          Header: 'Minus KG',
+          accessor: 'minusKg'
+        },
         {
           Header: 'Sub Total KG',
           accessor: 'subTotalKg'
-        },
-        {
-          Header: 'Status',
-          accessor: 'isActive',
-          Cell: ({ value }: { value: boolean }) => {
-            switch (value) {
-              case true:
-                return <Chip color="warning" label="Not Returned" size="small" />;
-              case false:
-                return <Chip color="success" label="Returned" size="small" />;
-              default:
-                return <Chip color="success" label="Returned" size="small" />;
-            }
-          }
         },
         {
           id: 'actions',

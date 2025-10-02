@@ -2,6 +2,7 @@ export type Bookstransfer = {
   _id?: string;
   collectedDate?: string;
   subTotalKg?: string;
+  minusKg?: string;
   totalKg?: string;
   code?: string;
 };
