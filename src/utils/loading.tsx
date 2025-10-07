@@ -7,7 +7,7 @@ export function Loading() {
             <Grid container spacing={2} style={{ minHeight: '200px' }}>
                 <div className='loading-container' style={{ display: "flex", alignContent: "center", justifyContent: "center" }}>
 
-                    <img src={'https://i.gifer.com/Ybin.gif'} alt="Loading..." className="zoom-logo" />
+                    <img src={'https://cdn.pixabay.com/animation/2023/06/08/15/03/15-03-45-927_512.gif'} alt="Loading..." className="zoom-logo" />
 
                 </div>
             </Grid>

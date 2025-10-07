@@ -24,6 +24,7 @@ const Dashboard = Loadable(lazy(() => import('pages/home/dashboard')));
 
 //tea-collection
 const TeaCollection = Loadable(lazy(() => import('pages/tea-dalu-management/page')));
+const TeaMoney = Loadable(lazy(() => import('pages/tea-dalu-management/tea-money/page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -39,7 +40,7 @@ const MainRoutes = {
       ),
       children: [
         {
-          path: 'home',
+          path: '',
           children: [
             {
               path: 'dashboard',
@@ -53,6 +54,15 @@ const MainRoutes = {
             {
               path: '',
               element: <TeaCollection />
+            }
+          ]
+        }, 
+        {
+          path: 'tea-money',
+          children: [
+            {
+              path: '',
+              element: <TeaMoney />
             }
           ]
         }, 

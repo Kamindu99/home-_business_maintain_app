@@ -1,6 +1,7 @@
 // material-ui
 
 import { Grid } from '@mui/material';
+import TeaMonthlyDashboard from './tea-collection';
 
 // project import
 
@@ -8,6 +9,7 @@ import { Grid } from '@mui/material';
 
 const Dashboard = () => (
   <>
+    <TeaMonthlyDashboard/>
     <Grid id="g-mapdisplay" style={{ height: '500px', width: '100%', border: '0' }}>
       <iframe
         style={{ height: '100%', width: '100%', border: '0' }}
