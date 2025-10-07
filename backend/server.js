@@ -29,14 +29,14 @@ app.use("/api/v1/home-business-management/tea-collection", teaDaluRoute);
 const userAuth = require('./routes/UserRoutes');
 app.use("/api/v1/home-business-management/auth", userAuth);
 
-const category = require('./routes/CategoryRoutes');
-app.use("/api/v1/parameter-management/category", category);
+// const category = require('./routes/CategoryRoutes');
+// app.use("/api/v1/parameter-management/category", category);
 
-const sendMail = require('./routes/SendMailRoutes');
-app.use("/api/v1/home-business-management/send-mail", sendMail);
+// const sendMail = require('./routes/SendMailRoutes');
+// app.use("/api/v1/home-business-management/send-mail", sendMail);
 
-const holidayCalandar = require('./routes/SystemCalandarRoutes');
-app.use("/api/v1/parameter-management/holiday", holidayCalandar);
+// const holidayCalandar = require('./routes/SystemCalandarRoutes');
+// app.use("/api/v1/parameter-management/holiday", holidayCalandar);
 
-const cronJobs = require('./cronJobs');
-app.use("/api/v1/cron-jobs", cronJobs);
+// const cronJobs = require('./cronJobs');
+// app.use("/api/v1/cron-jobs", cronJobs);
