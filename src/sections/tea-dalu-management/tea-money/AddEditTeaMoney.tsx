@@ -12,65 +12,66 @@ import * as Yup from 'yup';
 import { dispatch } from 'store';
 
 // assets
-import { createBooktransfer, toInitialState, updateBooktransfer } from 'store/reducers/tea-collection';
+import { createTeaMoney, toInitialState, updateTeaMoney } from 'store/reducers/tea-money';
 import { useEffect } from 'react';
 import SingleFileUpload from 'components/third-party/dropzone/SingleFile';
 
 // types
 
 // constant
-const getInitialValues = (booktransfer: FormikValues | null) => {
-  const newBooktransfer = {
-    bookId: '',
+const getInitialValues = (teaMoney: FormikValues | null) => {
+  const newTeaMoney = {
+    teaMoneyId: '',
     code: '',
-    collectedDate: new Date().toISOString().split('T')[0],
-    subTotalKg: '',
+    depositedDate: new Date().toISOString().split('T')[0],
     totalKg: '',
-    minusKg: '',
+    month: '',
+    amount: '',
     imageUrl: ''
   };
 
-  if (booktransfer) {
-    return _.merge({}, newBooktransfer, {
-      ...booktransfer,
-      categoryId: booktransfer.bmBook?.categoryId
+  if (teaMoney) {
+    return _.merge({}, newTeaMoney, {
+      ...teaMoney,
+      categoryId: teaMoney.bmBook?.categoryId
     });
   }
 
-  return newBooktransfer;
+  return newTeaMoney;
 };
 
 // ==============================|| CUSTOMER ADD / EDIT ||============================== //
 
 export interface Props {
-  booktransfer?: any;
+  teaMoney?: any;
   onCancel: () => void;
 }
 
-const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
-  console.log(booktransfer);
+const AddEditTransferBook = ({ teaMoney, onCancel }: Props) => {
+  console.log(teaMoney);
 
-  const BooktransferSchema = Yup.object().shape({
-    collectedDate: Yup.string().max(255).required('Borrow date is required'),
+  const TeaMoneySchema = Yup.object().shape({
+    depositedDate: Yup.string().max(255).required('Borrow date is required'),
     totalKg: Yup.string().max(255).required('Borrow person is required')
   });
 
   const formik = useFormik({
-    initialValues: getInitialValues(booktransfer!),
-    validationSchema: BooktransferSchema,
+    initialValues: getInitialValues(teaMoney!),
+    validationSchema: TeaMoneySchema,
     enableReinitialize: true,
     onSubmit: (values, { setSubmitting, resetForm }) => {
       try {
-        if (booktransfer) {
-          dispatch(updateBooktransfer(values));
+        if (teaMoney) {
+          dispatch(updateTeaMoney(values));
         } else {
           dispatch(
-            createBooktransfer({
+            createTeaMoney({
               code: values.code,
-              collectedDate: values.collectedDate,
+              depositedDate: values.depositedDate,
               totalKg: values.totalKg,
-              minusKg: values.minusKg,
-              subTotalKg: values.subTotalKg
+              imageUrl: values.imageUrl,
+              month: values.month,
+              amount: values.amount
             })
           );
         }
@@ -117,7 +118,7 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
       <FormikProvider value={formik}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-            <DialogTitle>{booktransfer ? 'Edit Payment Details' : 'New Payment Details'}</DialogTitle>
+            <DialogTitle>{teaMoney ? 'Edit Payment Details' : 'New Payment Details'}</DialogTitle>
             <DialogContent sx={{ p: 2.5 }}>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
@@ -136,15 +137,15 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="collectedDate">Month</InputLabel>
+                    <InputLabel htmlFor="month">Month</InputLabel>
                     <TextField
                       fullWidth
-                      id="collectedDate"
+                      id="month"
                       select
                       placeholder="Enter Month"
-                      {...getFieldProps('collectedDate')}
-                      error={Boolean(touched.collectedDate && errors.collectedDate)}
-                      helperText={touched.collectedDate && errors.collectedDate}
+                      {...getFieldProps('month')}
+                      error={Boolean(touched.month && errors.month)}
+                      helperText={touched.month && errors.month}
                     >
                       {month?.map((month) => (
                         <MenuItem key={month._id} value={month._id}>
@@ -170,31 +171,31 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="collectedDate">Deposited Date</InputLabel>
+                    <InputLabel htmlFor="depositedDate">Deposited Date</InputLabel>
                     <TextField
                       fullWidth
-                      id="collectedDate"
+                      id="depositedDate"
                       type="date"
                       placeholder="Enter Deposited Date"
-                      {...getFieldProps('collectedDate')}
-                      error={Boolean(touched.collectedDate && errors.collectedDate)}
-                      helperText={touched.collectedDate && errors.collectedDate}
+                      {...getFieldProps('depositedDate')}
+                      error={Boolean(touched.depositedDate && errors.depositedDate)}
+                      helperText={touched.depositedDate && errors.depositedDate}
                     />
                   </Stack>
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="subTotalKg">Amount</InputLabel>
+                    <InputLabel htmlFor="amount">Amount</InputLabel>
                     <TextField
                       fullWidth
-                      id="subTotalKg"
+                      id="amount"
                       type="text"
                       InputProps={{ readOnly: true }}
                       placeholder="Enter Amount"
-                      {...getFieldProps('subTotalKg')}
-                      error={Boolean(touched.subTotalKg && errors.subTotalKg)}
-                      helperText={touched.subTotalKg && errors.subTotalKg}
+                      {...getFieldProps('amount')}
+                      error={Boolean(touched.amount && errors.amount)}
+                      helperText={touched.amount && errors.amount}
                     />
                   </Stack>
                 </Grid>
@@ -222,7 +223,7 @@ const AddEditTransferBook = ({ booktransfer, onCancel }: Props) => {
                       Cancel
                     </Button>
                     <Button type="submit" variant="contained" disabled={isSubmitting}>
-                      {booktransfer ? 'Edit' : 'Add'}
+                      {teaMoney ? 'Edit' : 'Add'}
                     </Button>
                   </Stack>
                 </Grid>

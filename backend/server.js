@@ -29,6 +29,9 @@ app.use("/api/v1/home-business-management/tea-collection", teaDaluRoute);
 const userAuth = require('./routes/UserRoutes');
 app.use("/api/v1/home-business-management/auth", userAuth);
 
+const teaMoneyRoute = require('./routes/TeaMoneyRoutes');
+app.use("/api/v1/home-business-management/tea-money", teaMoneyRoute);
+
 // const category = require('./routes/CategoryRoutes');
 // app.use("/api/v1/parameter-management/category", category);
 

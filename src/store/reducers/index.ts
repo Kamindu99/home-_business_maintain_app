@@ -13,6 +13,7 @@ import cartReducer from './cart';
 import kanban from './kanban';
 import invoice from './invoice';
 import teaDaluCollection from './tea-collection';
+import teaMoney from './tea-money';
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
@@ -32,7 +33,8 @@ const reducers = combineReducers({
   product: productReducer,
   kanban,
   invoice,
-  teaDaluCollection
+  teaDaluCollection,
+  teaMoney
 });
 
 export default reducers;

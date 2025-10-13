@@ -41,10 +41,10 @@ import { GlobalFilter, renderFilterTypes } from 'utils/react-table';
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import AddEditTransfer from 'sections/tea-dalu-management/tea-money/AddEditTeaMoney';
+import AddEditTeaMoney from 'sections/tea-dalu-management/tea-money/AddEditTeaMoney';
 import { useDispatch, useSelector } from 'store';
 import { openSnackbar } from 'store/reducers/snackbar';
-import { getBookstransfer, toInitialState } from 'store/reducers/tea-collection';
+import { getTeaMoney, toInitialState } from 'store/reducers/tea-money';
 import { Loading } from 'utils/loading';
 import { ReactTableProps, dataProps } from './types/types';
 
@@ -159,15 +159,15 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
   );
 }
 
-// ==============================|| Transfer Book List ||============================== //
+// ==============================|| Tea Money Management List ||============================== //
 
-const TransferBookList = () => {
+const TeaMoneyManagementList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
   const [customer, setCustomer] = useState<any>(null);
   const [add, setAdd] = useState<boolean>(false);
-  const [bookList, setBookList] = useState<dataProps[]>([]);
+  const [teaMoneyDataList, setTeaMoneyList] = useState<dataProps[]>([]);
 
   const handleAdd = () => {
     setAdd(!add);
@@ -201,11 +201,11 @@ const TransferBookList = () => {
         },
           {
           Header: 'Month',
-          accessor: 'collectedDate2'
+          accessor: 'month'
         },
         {
           Header: 'Deposited Date',
-          accessor: 'collectedDate'
+          accessor: 'depositedDate'
         },
         {
           Header: 'Total KG',
@@ -214,7 +214,7 @@ const TransferBookList = () => {
        
         {
           Header: 'Amount',
-          accessor: 'subTotalKg'
+          accessor: 'amount'
         },
         {
           id: 'actions',
@@ -251,11 +251,11 @@ const TransferBookList = () => {
 
   // ----------------------- | API Call - Roles | ---------------------
 
-  const { bookstransferList, error, isLoading, success } = useSelector((state) => state.teaDaluCollection);
+  const { teaMoneyList, error, isLoading, success } = useSelector((state) => state.teaMoney);
 
   useEffect(() => {
     dispatch(
-      getBookstransfer({
+      getTeaMoney({
         direction: 'desc',
         page: 0,
         per_page: 10,
@@ -266,16 +266,16 @@ const TransferBookList = () => {
   }, [success]);
 
   useEffect(() => {
-    if (!bookstransferList) {
-      setBookList([]);
+    if (!teaMoneyList) {
+      setTeaMoneyList([]);
       return;
     }
-    if (bookstransferList == null) {
-      setBookList([]);
+    if (teaMoneyList == null) {
+      setTeaMoneyList([]);
       return;
     }
-    setBookList(bookstransferList?.result!);
-  }, [bookstransferList]);
+    setTeaMoneyList(teaMoneyList?.result!);
+  }, [teaMoneyList]);
 
   useEffect(() => {
     if (error != null) {
@@ -328,7 +328,7 @@ const TransferBookList = () => {
           <ReactTable
             columns={columns}
             getHeaderProps={(column: HeaderGroup) => column.getSortByToggleProps()}
-            data={bookList}
+            data={teaMoneyDataList}
             handleAddEdit={handleAdd}
           />
         </ScrollX>
@@ -344,11 +344,11 @@ const TransferBookList = () => {
           sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
           aria-describedby="alert-dialog-slide-description"
         >
-          <AddEditTransfer booktransfer={customer} onCancel={handleAdd} />
+          <AddEditTeaMoney teaMoney={customer} onCancel={handleAdd} />
         </Dialog>
       )}
     </>
   );
 };
 
-export default TransferBookList;
+export default TeaMoneyManagementList;
