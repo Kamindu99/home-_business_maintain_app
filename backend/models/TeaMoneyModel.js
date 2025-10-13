@@ -16,7 +16,7 @@ const teaMoneySchema = new mongoose.Schema({
     },
     imageUrl: {
         type: String,
-        required: true
+        //required: true
     },
     totalKg: {
         type: Number,

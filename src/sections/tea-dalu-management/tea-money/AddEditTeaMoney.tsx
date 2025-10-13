@@ -191,7 +191,7 @@ const AddEditTransferBook = ({ teaMoney, onCancel }: Props) => {
                       fullWidth
                       id="amount"
                       type="text"
-                      InputProps={{ readOnly: true }}
+                    //  InputProps={{ readOnly: true }}
                       placeholder="Enter Amount"
                       {...getFieldProps('amount')}
                       error={Boolean(touched.amount && errors.amount)}
