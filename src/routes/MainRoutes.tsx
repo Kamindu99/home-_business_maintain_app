@@ -22,9 +22,14 @@ const MaintenanceComingSoon = Loadable(lazy(() => import('pages/maintenance/comi
 // render - home page
 const Dashboard = Loadable(lazy(() => import('pages/home/dashboard')));
 
-//tea-collection
+//tea-management
 const TeaCollection = Loadable(lazy(() => import('pages/tea-dalu-management/page')));
 const TeaMoney = Loadable(lazy(() => import('pages/tea-dalu-management/tea-money/page')));
+
+//coconut-management
+const CoconutHarvest = Loadable(lazy(() => import('pages/coconut-management/coconut-harvest/page')));
+const CoconutHarvestAdd = Loadable(lazy(() => import('pages/coconut-management/coconut-harvest/add/page')));
+const CoconutMoney = Loadable(lazy(() => import('pages/coconut-management/coconut-money/page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -47,25 +52,37 @@ const MainRoutes = {
               element: <Dashboard />
             }
           ]
-        }, 
+        },
         {
-          path: 'tea-collection',
+          path: 'tea-management',
           children: [
             {
-              path: '',
+              path: 'tea-collection',
               element: <TeaCollection />
-            }
-          ]
-        }, 
-        {
-          path: 'tea-money',
-          children: [
+            },
             {
-              path: '',
+              path: 'tea-money',
               element: <TeaMoney />
             }
           ]
-        }, 
+        },
+         {
+          path: 'coconut-management',
+          children: [
+            {
+              path: 'coconut-harvest',
+              element: <CoconutHarvest />
+            },
+             {
+              path: 'coconut-harvest/add',
+              element: <CoconutHarvestAdd />
+            },
+            {
+              path: 'coconut-money',
+              element: <CoconutMoney />
+            }
+          ]
+        }
       ]
     },
     {
@@ -119,7 +136,7 @@ const MainRoutes = {
           element: <AuthCodeVerification />
         }
       ]
-    },
+    }
   ]
 };
 

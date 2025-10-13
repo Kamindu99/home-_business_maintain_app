@@ -14,21 +14,21 @@ const icons = { DashboardOutlined };
 
 const home: NavItemType = {
     id: 'home',
-    title: <FormattedMessage id="Tea Management" />,
+    title: <FormattedMessage id="Coconut Management" />,
     type: 'group',
     children: [
         {
-            id: 'tea-collection',
-            title: <FormattedMessage id="Tea Collection" />,
+            id: 'coconut-harvest',
+            title: <FormattedMessage id="Coconut Harvest" />,
             type: 'item',
-            url: '/tea-management/tea-collection',
+            url: '/coconut-management/coconut-harvest',
             icon: icons.DashboardOutlined,
         },
           {
-            id: 'tea-money',
-            title: <FormattedMessage id="Tea Money Payment" />,
+            id: 'coconut-money',
+            title: <FormattedMessage id="Coconut Money" />,
             type: 'item',
-            url: '/tea-management/tea-money',
+            url: '/coconut-management/coconut-money',
             icon: icons.DashboardOutlined,
         }
     ]
