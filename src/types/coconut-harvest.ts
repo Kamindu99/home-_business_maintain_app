@@ -10,6 +10,10 @@ export type CoconutHarvest = {
   code?: string;
   harvestDate?: string;
   totalCoconuts?: number;
+  harvestFeeAmount?: number;
+  harvestFeeCoconut?: number;
+  isPaidByCoconuts?: boolean;
+  noOfTrees?: number;
   listOfHarvest: SingleCoconutHarvest[];
 };
 

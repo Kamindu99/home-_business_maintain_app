@@ -5,10 +5,12 @@ import { Fragment, MouseEvent, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Dialog,
+  FormControlLabel,
   Grid,
   IconButton,
   InputLabel,
   Stack,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -163,6 +165,9 @@ const getInitialValues = (coconutHarvest: FormikValues | null) => {
   const newTeaMoney = {
     coconutHarvestId: '',
     code: '',
+    isPaidByCoconuts: true,
+    harvestFeeAmount: '',
+    harvestFeeCoconut: '',
     harvestDate: new Date().toISOString().split('T')[0]
   };
 
@@ -191,9 +196,12 @@ const CoconutHarvestManagementList = () => {
       try {
         dispatch(
           createCoconutHarvest({
-            code: values.code,
             harvestDate: values.harvestDate,
             totalCoconuts: coconutHarvestList?.result!.reduce((acc, curr) => acc + (curr.totalCoconuts || 0), 0),
+            isPaidByCoconuts: values.isPaidByCoconuts || false,
+            harvestFeeCoconut: isPaidByCoconuts ? Number(values.harvestFeeCoconut) : 0,
+            harvestFeeAmount: isPaidByCoconuts ? 0 : Number(values.harvestFeeAmount),
+            noOfTrees: coconutHarvestList?.result!.length,
             listOfHarvest: coconutHarvestList?.result!
           })
         );
@@ -296,10 +304,10 @@ const CoconutHarvestManagementList = () => {
         per_page: 10,
         search: '',
         sort: '_id',
-        date: new Date().toISOString().split('T')[0]
+        date: formik.values.harvestDate
       })
     );
-  }, [success]);
+  }, [success, formik.values.harvestDate]);
 
   useEffect(() => {
     if (!coconutHarvestList) {
@@ -353,6 +361,8 @@ const CoconutHarvestManagementList = () => {
     }
   }, [success]);
 
+  const isPaidByCoconuts = getFieldProps('isPaidByCoconuts');
+
   if (isLoading) {
     return <Loading />;
   }
@@ -361,21 +371,7 @@ const CoconutHarvestManagementList = () => {
     <>
       <MainCard content={false}>
         <Grid container spacing={3} sx={{ p: 2.5 }}>
-          <Grid item xs={12} md={6}>
-            <Stack spacing={1.25}>
-              <InputLabel htmlFor="code">Code</InputLabel>
-              <TextField
-                fullWidth
-                id="code"
-                type="text"
-                placeholder="Enter Code"
-                {...getFieldProps('code')}
-                error={Boolean(touched.code && errors.code)}
-                helperText={touched.code && errors.code}
-              />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4.5}>
             <Stack spacing={1.25}>
               <InputLabel htmlFor="harvestDate"> Date</InputLabel>
               <TextField
@@ -389,6 +385,56 @@ const CoconutHarvestManagementList = () => {
               />
             </Stack>
           </Grid>
+          <Grid item xs={12} md={3}>
+            <Stack spacing={1.25}>
+              <InputLabel htmlFor="isPaidByCoconuts">
+                <br />
+              </InputLabel>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={formik.values.isPaidByCoconuts || false}
+                    value={formik.values.isPaidByCoconuts || false}
+                    onChange={(e) => formik.setFieldValue('isPaidByCoconuts', e.target.checked || false)}
+                    color="primary"
+                  />
+                }
+                label="Paid By Coconuts"
+              />
+            </Stack>
+          </Grid>
+          {isPaidByCoconuts.value === false && (
+            <Grid item xs={12} md={4.5}>
+              <Stack spacing={1.25}>
+                <InputLabel htmlFor="harvestFeeAmount"> Harvest Fee (Cash) </InputLabel>
+                <TextField
+                  fullWidth
+                  id="harvestFeeAmount"
+                  type="text"
+                  placeholder="Enter Harvest Fee"
+                  {...getFieldProps('harvestFeeAmount')}
+                  error={Boolean(touched.harvestFeeAmount && errors.harvestFeeAmount)}
+                  helperText={touched.harvestFeeAmount && errors.harvestFeeAmount}
+                />
+              </Stack>
+            </Grid>
+          )}
+          {isPaidByCoconuts.value === true && (
+            <Grid item xs={12} md={4.5}>
+              <Stack spacing={1.25}>
+                <InputLabel htmlFor="harvestFeeCoconut"> Harvest Fee (Coconuts) </InputLabel>
+                <TextField
+                  fullWidth
+                  id="harvestFeeCoconut"
+                  type="text"
+                  placeholder="Enter Harvest Fee"
+                  {...getFieldProps('harvestFeeCoconut')}
+                  error={Boolean(touched.harvestFeeCoconut && errors.harvestFeeCoconut)}
+                  helperText={touched.harvestFeeCoconut && errors.harvestFeeCoconut}
+                />
+              </Stack>
+            </Grid>
+          )}
         </Grid>
         <ScrollX>
           <ReactTable

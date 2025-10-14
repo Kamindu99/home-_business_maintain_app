@@ -12,7 +12,6 @@ import * as Yup from 'yup';
 import { dispatch } from 'store';
 
 // assets
-import { useEffect } from 'react';
 import { createSingleCoconutHarvest, toInitialState, updateCoconutHarvest } from 'store/reducers/coconut-harvest';
 
 // types
@@ -21,7 +20,6 @@ import { createSingleCoconutHarvest, toInitialState, updateCoconutHarvest } from
 const getInitialValues = (coconutHarvest: FormikValues | null) => {
   const newTeaMoney = {
     coconutHarvestId: '',
-    code: '',
     nameOfTree: '',
     totalCoconuts: 0
   };
@@ -47,7 +45,7 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
   console.log(coconutHarvest);
 
   const TeaMoneySchema = Yup.object().shape({
-    code: Yup.string().max(255).required('Borrow date is required'),
+    totalCoconuts: Yup.string().max(255).required('Borrow date is required'),
     nameOfTree: Yup.string().max(255).required('Borrow person is required')
   });
 
@@ -62,7 +60,6 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
         } else {
           dispatch(
             createSingleCoconutHarvest({
-              code: values.code,
               nameOfTree: values.nameOfTree,
               totalCoconuts: Number(values.totalCoconuts)
             })
@@ -81,16 +78,6 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
-  const minusKg = getFieldProps('minusKg');
-  const totalKg = getFieldProps('totalKg');
-
-  useEffect(() => {
-    if (totalKg.value && minusKg.value) {
-      const subTotal = parseFloat(totalKg.value) - parseFloat(minusKg.value);
-      formik.setFieldValue('subTotalKg', subTotal.toString());
-    }
-  }, [totalKg.value, minusKg.value]);
-
   return (
     <>
       <FormikProvider value={formik}>
@@ -99,20 +86,6 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
             <DialogTitle>{coconutHarvest ? 'Edit Payment Details' : 'New Payment Details'}</DialogTitle>
             <DialogContent sx={{ p: 2.5 }}>
               <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <Stack spacing={1.25}>
-                    <InputLabel htmlFor="code">Code</InputLabel>
-                    <TextField
-                      fullWidth
-                      id="code"
-                      type="text"
-                      placeholder="Enter Code"
-                      {...getFieldProps('code')}
-                      error={Boolean(touched.code && errors.code)}
-                      helperText={touched.code && errors.code}
-                    />
-                  </Stack>
-                </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="nameOfTree">Name</InputLabel>

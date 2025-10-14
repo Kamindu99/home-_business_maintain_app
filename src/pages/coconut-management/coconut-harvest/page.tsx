@@ -203,8 +203,27 @@ const CoconutHarvestManagementList = () => {
           accessor: 'harvestDate'
         },
         {
+          Header: 'No of Trees',
+          accessor: 'noOfTrees'
+        },
+        {
           Header: 'Total Coconuts',
           accessor: 'totalCoconuts'
+        },
+        {
+          Header: 'Paid By Coconuts',
+          accessor: 'isPaidByCoconuts',
+          Cell: ({ row }: { row: Row }) => {
+            return <>{row?.values?.isPaidByCoconuts ? 'Yes' : 'No'}</>;
+          }
+        },
+        {
+          Header: 'Harvest Fee Coconut',
+          accessor: 'harvestFeeCoconut'
+        },
+        {
+          Header: 'Harvest Fee Cash',
+          accessor: 'harvestFeeAmount'
         },
         {
           id: 'actions',
