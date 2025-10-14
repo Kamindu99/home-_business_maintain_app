@@ -198,22 +198,13 @@ const CoconutHarvestManagementList = () => {
           Header: 'Code',
           accessor: 'code'
         },
-          {
-          Header: 'Month',
-          accessor: 'month'
+        {
+          Header: 'Harvest Date',
+          accessor: 'harvestDate'
         },
         {
-          Header: 'Deposited Date',
-          accessor: 'depositedDate'
-        },
-        {
-          Header: 'Total KG',
-          accessor: 'totalKg'
-        },
-       
-        {
-          Header: 'Amount',
-          accessor: 'amount'
+          Header: 'Total Coconuts',
+          accessor: 'totalCoconuts'
         },
         {
           id: 'actions',
@@ -228,7 +219,7 @@ const CoconutHarvestManagementList = () => {
                     <IconButton
                       color="primary"
                       onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                       // const data: any = row.original;
+                        // const data: any = row.original;
                         e.stopPropagation();
                       }}
                       disabled={row.values?.isActive === false}
@@ -236,7 +227,6 @@ const CoconutHarvestManagementList = () => {
                       <EditTwoTone twoToneColor={row.values?.statusId === 2 ? theme.palette.secondary.main : theme.palette.primary.main} />
                     </IconButton>
                   </Tooltip>
-               
                 </Stack>
               </>
             );

@@ -71,6 +71,69 @@ router.route("/").get(async (req, res) => {
     }
 });
 
+router.route("/by-date").get(async (req, res) => {
+    try {
+        // Extract query parameters
+        const { page = 0, per_page = 10, search = '', sort = '_id', direction = 'asc', date = '' } = req.query;
+
+        // Convert page and per_page to integers
+        const pageNumber = parseInt(page);
+        const pageSize = parseInt(per_page);
+
+        // Define sort object
+        const sortOrder = direction === 'desc' ? -1 : 1; // descending (-1) or ascending (1)
+        const sortObj = {};
+        sortObj[sort] = sortOrder;
+
+        // Build search query
+        let searchQuery = {};
+
+        // If a search term is provided, search by code
+        if (search) {
+            searchQuery.code = new RegExp(search, 'i'); // Case-insensitive search
+        }
+
+         if (date) {
+            searchQuery.harvestDate = new RegExp(search, 'i'); // Case-insensitive search
+        }
+
+        // Fetch total number of matching coconutHarvests
+        const total = await CoconutHarvest.countDocuments(searchQuery);
+
+        // Fetch paginated and sorted coconutHarvests
+        const coconutHarvests = await CoconutHarvest.find(searchQuery)
+            .sort(sortObj)
+            .skip(pageNumber * pageSize)
+            .limit(pageSize);
+
+        const results = await Promise.all(coconutHarvests.map(async (coconutHarvest) => {
+            return {
+                ...coconutHarvest.toObject()
+            };
+        }));
+
+        // Calculate total pages
+        const totalPages = Math.ceil(total / pageSize);
+
+        // Build the response
+        const response = {
+            pagination: {
+                page: pageNumber,
+                size: pageSize,
+                total: total,
+                totalPages: totalPages
+            },
+            result: results
+        };
+
+        res.json(response);
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'An error occurred' });
+    }
+});
+
 router.route("/:id").put(async (req, res) => {
     let coconutHarvestId = req.params.id;
     const { code,harvestDate,totalCoconuts} = req.body;
