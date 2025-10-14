@@ -46,10 +46,14 @@ import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import AddEditCoconutHarvest from 'sections/coconut-management/coconut-harvest/AddEditCoconutHarvest';
 import { useDispatch, useSelector } from 'store';
-import { getCoconutHarvestByDate, toInitialState } from 'store/reducers/coconut-harvest';
+import { createCoconutHarvest, getCoconutHarvestByDate, toInitialState } from 'store/reducers/coconut-harvest';
 import { openSnackbar } from 'store/reducers/snackbar';
 import { Loading } from 'utils/loading';
 import { ReactTableProps, dataProps } from './types/types';
+import { useNavigate } from 'react-router-dom';
+import { FormikValues, useFormik } from 'formik';
+import * as Yup from 'yup';
+import _ from 'lodash';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -90,13 +94,7 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
     <>
       <TableRowSelection selected={Object.keys(selectedRowIds).length} />
       <Stack spacing={3}>
-        <Stack
-          direction={matchDownSM ? 'column' : 'row'}
-          spacing={1}
-          justifyContent="right"
-          alignItems="center"
-          sx={{ p: 3, pb: 0 }}
-        >
+        <Stack direction={matchDownSM ? 'column' : 'row'} spacing={1} justifyContent="right" alignItems="center" sx={{ p: 3, pb: 0 }}>
           {/* <GlobalFilter
             preGlobalFilteredRows={preGlobalFilteredRows}
             globalFilter={globalFilter}
@@ -160,9 +158,56 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
 
 // ==============================|| Tea Money Management List ||============================== //
 
+// constant
+const getInitialValues = (coconutHarvest: FormikValues | null) => {
+  const newTeaMoney = {
+    coconutHarvestId: '',
+    code: '',
+    harvestDate: new Date().toISOString().split('T')[0]
+  };
+
+  if (coconutHarvest) {
+    return _.merge({}, newTeaMoney, {
+      ...coconutHarvest,
+      categoryId: coconutHarvest.bmBook?.categoryId
+    });
+  }
+
+  return newTeaMoney;
+};
+
 const CoconutHarvestManagementList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const router = useNavigate();
+
+  const TeaMoneySchema = Yup.object().shape({});
+
+  const formik = useFormik({
+    initialValues: getInitialValues(null),
+    validationSchema: TeaMoneySchema,
+    enableReinitialize: true,
+    onSubmit: (values, { setSubmitting, resetForm }) => {
+      try {
+        dispatch(
+          createCoconutHarvest({
+            code: values.code,
+            harvestDate: values.harvestDate,
+            totalCoconuts: coconutHarvestList?.result!.reduce((acc, curr) => acc + (curr.totalCoconuts || 0), 0),
+            listOfHarvest: coconutHarvestList?.result!
+          })
+        );
+        resetForm();
+        dispatch(toInitialState());
+        setSubmitting(false);
+        router(-1);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  });
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   const [customer, setCustomer] = useState<any>(null);
   const [add, setAdd] = useState<boolean>(false);
@@ -200,21 +245,12 @@ const CoconutHarvestManagementList = () => {
           accessor: 'code'
         },
         {
-          Header: 'Month',
-          accessor: 'month'
+          Header: 'Name',
+          accessor: 'nameOfTree'
         },
         {
-          Header: 'Deposited Date',
-          accessor: 'depositedDate'
-        },
-        {
-          Header: 'Total KG',
-          accessor: 'totalKg'
-        },
-
-        {
-          Header: 'Amount',
-          accessor: 'amount'
+          Header: 'Total Coconuts',
+          accessor: 'totalCoconuts'
         },
         {
           id: 'actions',
@@ -328,23 +364,32 @@ const CoconutHarvestManagementList = () => {
           <Grid item xs={12} md={6}>
             <Stack spacing={1.25}>
               <InputLabel htmlFor="code">Code</InputLabel>
-              <TextField fullWidth id="code" type="text" placeholder="Enter Code" value={'001'} />
+              <TextField
+                fullWidth
+                id="code"
+                type="text"
+                placeholder="Enter Code"
+                {...getFieldProps('code')}
+                error={Boolean(touched.code && errors.code)}
+                helperText={touched.code && errors.code}
+              />
             </Stack>
           </Grid>
           <Grid item xs={12} md={6}>
             <Stack spacing={1.25}>
-              <InputLabel htmlFor="depositedDate"> Date</InputLabel>
+              <InputLabel htmlFor="harvestDate"> Date</InputLabel>
               <TextField
                 fullWidth
-                id="depositedDate"
+                id="harvestDate"
                 type="date"
-                placeholder="Enter Deposited Date"
-                value={new Date().toISOString().split('T')[0]}
+                placeholder="Enter Date"
+                {...getFieldProps('harvestDate')}
+                error={Boolean(touched.harvestDate && errors.harvestDate)}
+                helperText={touched.harvestDate && errors.harvestDate}
               />
             </Stack>
           </Grid>
         </Grid>
-
         <ScrollX>
           <ReactTable
             columns={columns}
@@ -353,6 +398,31 @@ const CoconutHarvestManagementList = () => {
             handleAddEdit={handleAdd}
           />
         </ScrollX>
+        <Grid container justifyContent="space-between" alignItems="center" sx={{ p: 2.5 }}>
+          <Grid item></Grid>
+          <Grid item>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Button
+                color="error"
+                onClick={() => {
+                  router(-1);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="contained"
+                disabled={isSubmitting}
+                onClick={() => {
+                  handleSubmit();
+                }}
+              >
+                {'Save'}
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
       </MainCard>
       {add && (
         <Dialog

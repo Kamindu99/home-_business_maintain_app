@@ -22,7 +22,7 @@ const getInitialValues = (coconutHarvest: FormikValues | null) => {
   const newTeaMoney = {
     coconutHarvestId: '',
     code: '',
-    name: '',
+    nameOfTree: '',
     totalCoconuts: 0
   };
 
@@ -48,7 +48,7 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
 
   const TeaMoneySchema = Yup.object().shape({
     code: Yup.string().max(255).required('Borrow date is required'),
-    name: Yup.string().max(255).required('Borrow person is required')
+    nameOfTree: Yup.string().max(255).required('Borrow person is required')
   });
 
   const formik = useFormik({
@@ -63,7 +63,7 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
           dispatch(
             createSingleCoconutHarvest({
               code: values.code,
-              name: values.name,
+              nameOfTree: values.nameOfTree,
               totalCoconuts: Number(values.totalCoconuts)
             })
           );
@@ -115,15 +115,15 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="name">Name</InputLabel>
+                    <InputLabel htmlFor="nameOfTree">Name</InputLabel>
                     <TextField
                       fullWidth
-                      id="name"
+                      id="nameOfTree"
                       type="text"
                       placeholder="Enter Name"
-                      {...getFieldProps('name')}
-                      error={Boolean(touched.name && errors.name)}
-                      helperText={touched.name && errors.name}
+                      {...getFieldProps('nameOfTree')}
+                      error={Boolean(touched.nameOfTree && errors.nameOfTree)}
+                      helperText={touched.nameOfTree && errors.nameOfTree}
                     />
                   </Stack>
                 </Grid>

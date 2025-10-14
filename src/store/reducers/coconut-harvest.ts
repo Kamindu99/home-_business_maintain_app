@@ -6,7 +6,7 @@ import axios from 'utils/axios';
 import { dispatch } from '../index';
 
 // types
-import { CoconutHarvest, DefaultRootStateProps, queryStringParams } from 'types/coconut-harvest';
+import { CoconutHarvest, DefaultRootStateProps, queryStringParams, SingleCoconutHarvest } from 'types/coconut-harvest';
 
 // ----------------------------------------------------------------------
 
@@ -142,7 +142,7 @@ export function createCoconutHarvest(createCoconutHarvestProps: CoconutHarvest) 
   };
 }
 
-export function createSingleCoconutHarvest(createCoconutHarvestProps: CoconutHarvest) {
+export function createSingleCoconutHarvest(createCoconutHarvestProps: SingleCoconutHarvest) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -156,7 +156,7 @@ export function createSingleCoconutHarvest(createCoconutHarvestProps: CoconutHar
   };
 }
 
-export function updateCoconutHarvest(updateCoconutHarvestProps: CoconutHarvest) {
+export function updateCoconutHarvest(updateCoconutHarvestProps: SingleCoconutHarvest) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {

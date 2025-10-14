@@ -104,9 +104,17 @@ router.route("/by-date").get(async (req, res) => {
             searchQuery.code = new RegExp(search, 'i'); // Case-insensitive search
         }
 
-        //  if (date) {
-        //     searchQuery.createdDate?.toISOString().split('T')[0] = new RegExp(date, 'i'); // Case-insensitive search
-        // }
+        // Filter by date (e.g., "2025-10-14")
+        if (date) {
+            const startOfDay = new Date(date);
+            const endOfDay = new Date(date);
+            endOfDay.setHours(23, 59, 59, 999);
+
+            searchQuery.createdDate = {
+                $gte: startOfDay,
+                $lte: endOfDay
+            };
+        }
 
         // Fetch total number of matching coconutHarvests
         const total = await SingleCoconutHarvest.countDocuments(searchQuery);

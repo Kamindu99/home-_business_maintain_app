@@ -1,8 +1,16 @@
-export type CoconutHarvest = {
+export type SingleCoconutHarvest = {
   _id?: string;
   code?: string;
   totalCoconuts?: number;
-  name?: string;
+  nameOfTree?: string;
+};
+
+export type CoconutHarvest = {
+  _id?: string;
+  code?: string;
+  harvestDate?: string;
+  totalCoconuts?: number;
+  listOfHarvest: SingleCoconutHarvest[];
 };
 
 export type PaginationDTO = {

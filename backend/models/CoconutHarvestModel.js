@@ -14,6 +14,10 @@ const coconutHarvestSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    listOfHarvest:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'singleCoconutHarvests'
+    }],
     createdDate: {
         type: Date,
         default: Date.now
