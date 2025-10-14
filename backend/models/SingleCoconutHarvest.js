@@ -6,7 +6,7 @@ const SingleCoconutHarvestSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    name: {
+    nameOfTree: {
         type: String,
        // required: true
     },

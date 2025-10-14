@@ -47,8 +47,8 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
   console.log(coconutHarvest);
 
   const TeaMoneySchema = Yup.object().shape({
-    depositedDate: Yup.string().max(255).required('Borrow date is required'),
-    totalKg: Yup.string().max(255).required('Borrow person is required')
+    code: Yup.string().max(255).required('Borrow date is required'),
+    name: Yup.string().max(255).required('Borrow person is required')
   });
 
   const formik = useFormik({
@@ -64,7 +64,7 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
             createSingleCoconutHarvest({
               code: values.code,
               name: values.name,
-              totalCoconuts: values.totalCoconuts
+              totalCoconuts: Number(values.totalCoconuts)
             })
           );
         }
@@ -113,7 +113,7 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
                     />
                   </Stack>
                 </Grid>
-                  <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
                     <InputLabel htmlFor="name">Name</InputLabel>
                     <TextField

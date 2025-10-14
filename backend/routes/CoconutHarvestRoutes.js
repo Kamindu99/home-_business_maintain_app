@@ -104,9 +104,9 @@ router.route("/by-date").get(async (req, res) => {
             searchQuery.code = new RegExp(search, 'i'); // Case-insensitive search
         }
 
-         if (date) {
-            searchQuery.createdDate?.toISOString().split('T')[0] = new RegExp(date, 'i'); // Case-insensitive search
-        }
+        //  if (date) {
+        //     searchQuery.createdDate?.toISOString().split('T')[0] = new RegExp(date, 'i'); // Case-insensitive search
+        // }
 
         // Fetch total number of matching coconutHarvests
         const total = await SingleCoconutHarvest.countDocuments(searchQuery);
