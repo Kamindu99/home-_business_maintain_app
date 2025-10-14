@@ -1,12 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const CoconutHarvest = require('../models/CoconutHarvestModel')
+const SingleCoconutHarvest = require('../models/SingleCoconutHarvest')
 
 router.post("/", async (req, res) => {
     const coconutHarvest = new CoconutHarvest(req.body);
     try {
         const savedCoconutHarvest = await coconutHarvest.save();
         res.json(savedCoconutHarvest);
+    } catch (err) {
+        res.json({ message: err });
+    }
+})
+
+router.post("/single-add", async (req, res) => {
+    const singleCoconutHarvest = new SingleCoconutHarvest(req.body);
+    try {
+        const savedSingleCoconutHarvest = await singleCoconutHarvest.save();
+        res.json(savedSingleCoconutHarvest);
     } catch (err) {
         res.json({ message: err });
     }
@@ -94,14 +105,14 @@ router.route("/by-date").get(async (req, res) => {
         }
 
          if (date) {
-            searchQuery.harvestDate = new RegExp(date, 'i'); // Case-insensitive search
+            searchQuery.createdDate?.toISOString().split('T')[0] = new RegExp(date, 'i'); // Case-insensitive search
         }
 
         // Fetch total number of matching coconutHarvests
-        const total = await CoconutHarvest.countDocuments(searchQuery);
+        const total = await SingleCoconutHarvest.countDocuments(searchQuery);
 
         // Fetch paginated and sorted coconutHarvests
-        const coconutHarvests = await CoconutHarvest.find(searchQuery)
+        const coconutHarvests = await SingleCoconutHarvest.find(searchQuery)
             .sort(sortObj)
             .skip(pageNumber * pageSize)
             .limit(pageSize);

@@ -1,5 +1,5 @@
 // material-ui
-import { Button, DialogActions, DialogContent, DialogTitle, Divider, Grid, InputLabel, MenuItem, Stack, TextField } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, Divider, Grid, InputLabel, Stack, TextField } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
@@ -12,9 +12,8 @@ import * as Yup from 'yup';
 import { dispatch } from 'store';
 
 // assets
-import { createTeaMoney, toInitialState, updateTeaMoney } from 'store/reducers/tea-money';
 import { useEffect } from 'react';
-import SingleFileUpload from 'components/third-party/dropzone/SingleFile';
+import { createSingleCoconutHarvest, toInitialState, updateCoconutHarvest } from 'store/reducers/coconut-harvest';
 
 // types
 
@@ -23,11 +22,8 @@ const getInitialValues = (coconutHarvest: FormikValues | null) => {
   const newTeaMoney = {
     coconutHarvestId: '',
     code: '',
-    depositedDate: new Date().toISOString().split('T')[0],
-    totalKg: '',
-    month: '',
-    amount: '',
-    imageUrl: ''
+    name: '',
+    totalCoconuts: 0
   };
 
   if (coconutHarvest) {
@@ -62,16 +58,13 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
     onSubmit: (values, { setSubmitting, resetForm }) => {
       try {
         if (coconutHarvest) {
-          dispatch(updateTeaMoney(values));
+          dispatch(updateCoconutHarvest(values));
         } else {
           dispatch(
-            createTeaMoney({
+            createSingleCoconutHarvest({
               code: values.code,
-              depositedDate: values.depositedDate,
-              totalKg: values.totalKg,
-              imageUrl: values.imageUrl,
-              month: values.month,
-              amount: values.amount
+              name: values.name,
+              totalCoconuts: values.totalCoconuts
             })
           );
         }
@@ -98,21 +91,6 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
     }
   }, [totalKg.value, minusKg.value]);
 
-  const month = [
-    { _id: 'January', monthName: 'January' },
-    { _id: 'February', monthName: 'February' },
-    { _id: 'March', monthName: 'March' },
-    { _id: 'April', monthName: 'April' },
-    { _id: 'May', monthName: 'May' },
-    { _id: 'June', monthName: 'June' },
-    { _id: 'July', monthName: 'July' },
-    { _id: 'August', monthName: 'August' },
-    { _id: 'September', monthName: 'September' },
-    { _id: 'October', monthName: 'October' },
-    { _id: 'November', monthName: 'November' },
-    { _id: 'December', monthName: 'December' }
-  ];
-
   return (
     <>
       <FormikProvider value={formik}>
@@ -135,79 +113,31 @@ const AddEditTransferBook = ({ coconutHarvest, onCancel }: Props) => {
                     />
                   </Stack>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="month">Month</InputLabel>
+                    <InputLabel htmlFor="name">Name</InputLabel>
                     <TextField
                       fullWidth
-                      id="month"
-                      select
-                      placeholder="Enter Month"
-                      {...getFieldProps('month')}
-                      error={Boolean(touched.month && errors.month)}
-                      helperText={touched.month && errors.month}
-                    >
-                      {month?.map((month) => (
-                        <MenuItem key={month._id} value={month._id}>
-                          {month.monthName}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Stack>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Stack spacing={1.25}>
-                    <InputLabel htmlFor="totalKg"> Total (KG)</InputLabel>
-                    <TextField
-                      fullWidth
-                      id="totalKg"
+                      id="name"
                       type="text"
-                      placeholder="Enter Total (KG)"
-                      {...getFieldProps('totalKg')}
-                      error={Boolean(touched.totalKg && errors.totalKg)}
-                      helperText={touched.totalKg && errors.totalKg}
+                      placeholder="Enter Name"
+                      {...getFieldProps('name')}
+                      error={Boolean(touched.name && errors.name)}
+                      helperText={touched.name && errors.name}
                     />
                   </Stack>
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <Stack spacing={1.25}>
-                    <InputLabel htmlFor="depositedDate">Deposited Date</InputLabel>
+                    <InputLabel htmlFor="totalCoconuts"> Total Coconuts</InputLabel>
                     <TextField
                       fullWidth
-                      id="depositedDate"
-                      type="date"
-                      placeholder="Enter Deposited Date"
-                      {...getFieldProps('depositedDate')}
-                      error={Boolean(touched.depositedDate && errors.depositedDate)}
-                      helperText={touched.depositedDate && errors.depositedDate}
-                    />
-                  </Stack>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <Stack spacing={1.25}>
-                    <InputLabel htmlFor="amount">Amount</InputLabel>
-                    <TextField
-                      fullWidth
-                      id="amount"
+                      id="totalCoconuts"
                       type="text"
-                    //  InputProps={{ readOnly: true }}
-                      placeholder="Enter Amount"
-                      {...getFieldProps('amount')}
-                      error={Boolean(touched.amount && errors.amount)}
-                      helperText={touched.amount && errors.amount}
-                    />
-                  </Stack>
-                </Grid>
-                <Grid item xs={12} lg={12}>
-                  <Stack spacing={1.25}>
-                    <InputLabel htmlFor="imageUrl">Image Url</InputLabel>
-                    <SingleFileUpload
-                      sx={{ width: '100%' }}
-                      //@ts-ignore
-                      file={formik.values.imageUrl!}
-                      setFieldValue={formik.setFieldValue}
-                      error={formik.touched.imageUrl && Boolean(formik.errors.imageUrl)}
+                      placeholder="Enter Total Coconuts"
+                      {...getFieldProps('totalCoconuts')}
+                      error={Boolean(touched.totalCoconuts && errors.totalCoconuts)}
+                      helperText={touched.totalCoconuts && errors.totalCoconuts}
                     />
                   </Stack>
                 </Grid>

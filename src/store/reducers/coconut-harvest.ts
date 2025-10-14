@@ -142,11 +142,28 @@ export function createCoconutHarvest(createCoconutHarvestProps: CoconutHarvest) 
   };
 }
 
+export function createSingleCoconutHarvest(createCoconutHarvestProps: CoconutHarvest) {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.post('/api/v1/home-business-management/coconut-harvest/single-add', createCoconutHarvestProps);
+      dispatch(slice.actions.createCoconutHarvestSuccess(response.data));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    } finally {
+      dispatch(slice.actions.finishLoading());
+    }
+  };
+}
+
 export function updateCoconutHarvest(updateCoconutHarvestProps: CoconutHarvest) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.put(`/api/v1/home-business-management/coconut-harvest/${updateCoconutHarvestProps?._id}`, updateCoconutHarvestProps);
+      const response = await axios.put(
+        `/api/v1/home-business-management/coconut-harvest/${updateCoconutHarvestProps?._id}`,
+        updateCoconutHarvestProps
+      );
       dispatch(slice.actions.updateCoconutHarvestSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

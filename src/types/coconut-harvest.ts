@@ -1,11 +1,8 @@
 export type CoconutHarvest = {
   _id?: string;
-  depositedDate?: string;
-  month?: string;
-  totalKg?: string;
   code?: string;
-  amount?: string;
-  imageUrl?: string;
+  totalCoconuts?: number;
+  name?: string;
 };
 
 export type PaginationDTO = {
