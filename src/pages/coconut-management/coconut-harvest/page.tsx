@@ -4,7 +4,6 @@ import { Fragment, MouseEvent, useEffect, useMemo, useState } from 'react';
 // material ui
 import {
   Button,
-  Dialog,
   IconButton,
   Stack,
   Table,
@@ -19,7 +18,6 @@ import {
 } from '@mui/material';
 
 // third-party
-import { PopupTransition } from 'components/@extended/Transitions';
 import { EmptyTable, HeaderSort, SortingSelect, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
 import {
   Cell,
@@ -41,13 +39,12 @@ import { GlobalFilter, renderFilterTypes } from 'utils/react-table';
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import AddEditTeaMoney from 'sections/tea-dalu-management/tea-money/AddEditTeaMoney';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'store';
+import { getCoconutHarvest, toInitialState } from 'store/reducers/coconut-harvest';
 import { openSnackbar } from 'store/reducers/snackbar';
-import { getTeaMoney, toInitialState } from 'store/reducers/tea-money';
 import { Loading } from 'utils/loading';
 import { ReactTableProps, dataProps } from './types/types';
-import { useNavigate } from 'react-router-dom';
 
 // ==============================|| REACT TABLE ||============================== //
 
@@ -162,14 +159,12 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
 
 // ==============================|| Tea Money Management List ||============================== //
 
-const TeaMoneyManagementList = () => {
+const CoconutHarvestManagementList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const router = useNavigate();
 
-  const [customer, setCustomer] = useState<any>(null);
-  const [add] = useState<boolean>(false);
-  const [teaMoneyDataList, setTeaMoneyList] = useState<dataProps[]>([]);
+  const [coconutHarvestDataList, setCoconutHarvestList] = useState<dataProps[]>([]);
 
   const handleAdd = () => {
     // setAdd(!add);
@@ -233,10 +228,8 @@ const TeaMoneyManagementList = () => {
                     <IconButton
                       color="primary"
                       onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                        const data: any = row.original;
+                       // const data: any = row.original;
                         e.stopPropagation();
-                        setCustomer({ ...data });
-                        handleAdd();
                       }}
                       disabled={row.values?.isActive === false}
                     >
@@ -255,11 +248,11 @@ const TeaMoneyManagementList = () => {
 
   // ----------------------- | API Call - Roles | ---------------------
 
-  const { teaMoneyList, error, isLoading, success } = useSelector((state) => state.teaMoney);
+  const { coconutHarvestList, error, isLoading, success } = useSelector((state) => state.coconutHarvest);
 
   useEffect(() => {
     dispatch(
-      getTeaMoney({
+      getCoconutHarvest({
         direction: 'desc',
         page: 0,
         per_page: 10,
@@ -270,16 +263,16 @@ const TeaMoneyManagementList = () => {
   }, [success]);
 
   useEffect(() => {
-    if (!teaMoneyList) {
-      setTeaMoneyList([]);
+    if (!coconutHarvestList) {
+      setCoconutHarvestList([]);
       return;
     }
-    if (teaMoneyList == null) {
-      setTeaMoneyList([]);
+    if (coconutHarvestList == null) {
+      setCoconutHarvestList([]);
       return;
     }
-    setTeaMoneyList(teaMoneyList?.result!);
-  }, [teaMoneyList]);
+    setCoconutHarvestList(coconutHarvestList?.result!);
+  }, [coconutHarvestList]);
 
   useEffect(() => {
     if (error != null) {
@@ -332,27 +325,13 @@ const TeaMoneyManagementList = () => {
           <ReactTable
             columns={columns}
             getHeaderProps={(column: HeaderGroup) => column.getSortByToggleProps()}
-            data={teaMoneyDataList}
+            data={coconutHarvestDataList}
             handleAddEdit={handleAdd}
           />
         </ScrollX>
       </MainCard>
-      {add && (
-        <Dialog
-          maxWidth="sm"
-          TransitionComponent={PopupTransition}
-          keepMounted
-          fullWidth
-          onClose={handleAdd}
-          open={add}
-          sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
-          aria-describedby="alert-dialog-slide-description"
-        >
-          <AddEditTeaMoney teaMoney={customer} onCancel={handleAdd} />
-        </Dialog>
-      )}
     </>
   );
 };
 
-export default TeaMoneyManagementList;
+export default CoconutHarvestManagementList;

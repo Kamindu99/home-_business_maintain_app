@@ -14,6 +14,8 @@ import kanban from './kanban';
 import invoice from './invoice';
 import teaDaluCollection from './tea-collection';
 import teaMoney from './tea-money';
+import coconutHarvest from './coconut-harvest';
+import coconutMoney from './coconut-money';
 
 // ==============================|| COMBINE REDUCERS ||============================== //
 
@@ -34,7 +36,9 @@ const reducers = combineReducers({
   kanban,
   invoice,
   teaDaluCollection,
-  teaMoney
+  teaMoney,
+  coconutHarvest,
+  coconutMoney
 });
 
 export default reducers;

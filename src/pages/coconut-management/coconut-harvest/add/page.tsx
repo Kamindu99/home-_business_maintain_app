@@ -5,13 +5,16 @@ import { Fragment, MouseEvent, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Dialog,
+  Grid,
   IconButton,
+  InputLabel,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Tooltip,
   alpha,
   useMediaQuery,
@@ -20,7 +23,7 @@ import {
 
 // third-party
 import { PopupTransition } from 'components/@extended/Transitions';
-import { EmptyTable, HeaderSort, SortingSelect, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
+import { EmptyTable, HeaderSort, TablePagination, TableRowSelection } from 'components/third-party/ReactTable';
 import {
   Cell,
   Column,
@@ -35,16 +38,16 @@ import {
   useTable
 } from 'react-table';
 
-import { GlobalFilter, renderFilterTypes } from 'utils/react-table';
+import { renderFilterTypes } from 'utils/react-table';
 
 // project import
 import { EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import AddEditTeaMoney from 'sections/tea-dalu-management/tea-money/AddEditTeaMoney';
+import AddEditCoconutHarvest from 'sections/coconut-management/coconut-harvest/AddEditCoconutHarvest';
 import { useDispatch, useSelector } from 'store';
+import { getCoconutHarvestByDate, toInitialState } from 'store/reducers/coconut-harvest';
 import { openSnackbar } from 'store/reducers/snackbar';
-import { getTeaMoney, toInitialState } from 'store/reducers/tea-money';
 import { Loading } from 'utils/loading';
 import { ReactTableProps, dataProps } from './types/types';
 
@@ -63,15 +66,11 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    allColumns,
     rows,
     page,
     gotoPage,
     setPageSize,
-    state: { globalFilter, selectedRowIds, pageIndex, pageSize },
-    preGlobalFilteredRows,
-    setGlobalFilter,
-    setSortBy
+    state: { selectedRowIds, pageIndex, pageSize }
   } = useTable(
     {
       columns,
@@ -94,18 +93,18 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
         <Stack
           direction={matchDownSM ? 'column' : 'row'}
           spacing={1}
-          justifyContent="space-between"
+          justifyContent="right"
           alignItems="center"
           sx={{ p: 3, pb: 0 }}
         >
-          <GlobalFilter
+          {/* <GlobalFilter
             preGlobalFilteredRows={preGlobalFilteredRows}
             globalFilter={globalFilter}
             setGlobalFilter={setGlobalFilter}
             size="small"
-          />
-          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="center" spacing={1}>
-            <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} />
+          /> */}
+          <Stack direction={matchDownSM ? 'column' : 'row'} alignItems="end" spacing={1}>
+            {/* <SortingSelect sortBy={sortBy.id} setSortBy={setSortBy} allColumns={allColumns} /> */}
             <Button variant="contained" startIcon={<PlusOutlined />} onClick={handleAddEdit} size="small">
               Add New
             </Button>
@@ -161,13 +160,13 @@ function ReactTable({ columns, data, handleAddEdit, getHeaderProps }: ReactTable
 
 // ==============================|| Tea Money Management List ||============================== //
 
-const TeaMoneyManagementList = () => {
+const CoconutHarvestManagementList = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
   const [customer, setCustomer] = useState<any>(null);
-  const [add,setAdd] = useState<boolean>(false);
-  const [teaMoneyDataList, setTeaMoneyList] = useState<dataProps[]>([]);
+  const [add, setAdd] = useState<boolean>(false);
+  const [coconutHarvestDataList, setCoconutHarvestList] = useState<dataProps[]>([]);
 
   const handleAdd = () => {
     setAdd(!add);
@@ -200,7 +199,7 @@ const TeaMoneyManagementList = () => {
           Header: 'Code',
           accessor: 'code'
         },
-          {
+        {
           Header: 'Month',
           accessor: 'month'
         },
@@ -212,7 +211,7 @@ const TeaMoneyManagementList = () => {
           Header: 'Total KG',
           accessor: 'totalKg'
         },
-       
+
         {
           Header: 'Amount',
           accessor: 'amount'
@@ -240,7 +239,6 @@ const TeaMoneyManagementList = () => {
                       <EditTwoTone twoToneColor={row.values?.statusId === 2 ? theme.palette.secondary.main : theme.palette.primary.main} />
                     </IconButton>
                   </Tooltip>
-               
                 </Stack>
               </>
             );
@@ -252,31 +250,32 @@ const TeaMoneyManagementList = () => {
 
   // ----------------------- | API Call - Roles | ---------------------
 
-  const { teaMoneyList, error, isLoading, success } = useSelector((state) => state.teaMoney);
+  const { coconutHarvestList, error, isLoading, success } = useSelector((state) => state.coconutHarvest);
 
   useEffect(() => {
     dispatch(
-      getTeaMoney({
+      getCoconutHarvestByDate({
         direction: 'desc',
         page: 0,
         per_page: 10,
         search: '',
-        sort: '_id'
+        sort: '_id',
+        date: new Date().toISOString().split('T')[0]
       })
     );
   }, [success]);
 
   useEffect(() => {
-    if (!teaMoneyList) {
-      setTeaMoneyList([]);
+    if (!coconutHarvestList) {
+      setCoconutHarvestList([]);
       return;
     }
-    if (teaMoneyList == null) {
-      setTeaMoneyList([]);
+    if (coconutHarvestList == null) {
+      setCoconutHarvestList([]);
       return;
     }
-    setTeaMoneyList(teaMoneyList?.result!);
-  }, [teaMoneyList]);
+    setCoconutHarvestList(coconutHarvestList?.result!);
+  }, [coconutHarvestList]);
 
   useEffect(() => {
     if (error != null) {
@@ -325,11 +324,32 @@ const TeaMoneyManagementList = () => {
   return (
     <>
       <MainCard content={false}>
+        <Grid container spacing={3} sx={{ p: 2.5 }}>
+          <Grid item xs={12} md={6}>
+            <Stack spacing={1.25}>
+              <InputLabel htmlFor="code">Code</InputLabel>
+              <TextField fullWidth id="code" type="text" placeholder="Enter Code" value={'001'} />
+            </Stack>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Stack spacing={1.25}>
+              <InputLabel htmlFor="depositedDate"> Date</InputLabel>
+              <TextField
+                fullWidth
+                id="depositedDate"
+                type="date"
+                placeholder="Enter Deposited Date"
+                value={new Date().toISOString().split('T')[0]}
+              />
+            </Stack>
+          </Grid>
+        </Grid>
+
         <ScrollX>
           <ReactTable
             columns={columns}
             getHeaderProps={(column: HeaderGroup) => column.getSortByToggleProps()}
-            data={teaMoneyDataList}
+            data={coconutHarvestDataList}
             handleAddEdit={handleAdd}
           />
         </ScrollX>
@@ -345,11 +365,11 @@ const TeaMoneyManagementList = () => {
           sx={{ '& .MuiDialog-paper': { p: 0 }, transition: 'transform 225ms' }}
           aria-describedby="alert-dialog-slide-description"
         >
-          <AddEditTeaMoney teaMoney={customer} onCancel={handleAdd} />
+          <AddEditCoconutHarvest coconutHarvest={customer} onCancel={handleAdd} />
         </Dialog>
       )}
     </>
   );
 };
 
-export default TeaMoneyManagementList;
+export default CoconutHarvestManagementList;
