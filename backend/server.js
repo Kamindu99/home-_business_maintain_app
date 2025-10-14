@@ -32,6 +32,9 @@ app.use("/api/v1/home-business-management/auth", userAuth);
 const teaMoneyRoute = require('./routes/TeaMoneyRoutes');
 app.use("/api/v1/home-business-management/tea-money", teaMoneyRoute);
 
+const coconutHarvestRoute = require('./routes/CoconutHarvestRoutes');
+app.use("/api/v1/home-business-management/coconut-harvest", coconutHarvestRoute);
+
 // const category = require('./routes/CategoryRoutes');
 // app.use("/api/v1/parameter-management/category", category);
 
